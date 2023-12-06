@@ -14,6 +14,6 @@ public interface LLHFunctionInterface {
     void addConsec_counts(LLHFunctionInterface function);
     double getF1();
     void setF1(double f1);
-    double getF2();
-    void setF2(double f2);
+    void addF2(LLHFunctionInterface function,double f2);
+    double getF2(LLHFunctionInterface function);
 } 
