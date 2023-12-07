@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class HHOAlgorithm {
         for (int i = 0; i < tour.size() - 1; i++) {
             City city1 = graph.get(tour.get(i));
             City city2 = graph.get(tour.get(i + 1));
-            if(i != 0){
+            if(i != -1){
                 fitness += city1.distanceTo(city2)*Math.pow(weight, i);
             }
         }
@@ -41,24 +42,55 @@ public class HHOAlgorithm {
         return fitness;
     }
     public static List<Integer> randomKeyEncode(List<Double> tour) {
-        List<Integer> encoded = IntStream.range(0, tour.size())
-                .boxed()
-                .sorted((i, j) -> Double.compare(tour.get(i), tour.get(j)))
-                .collect(Collectors.toList());
-        return encoded;
+        // List<Integer> encoded = IntStream.range(0, tour.size())
+        //         .boxed()
+        //         .sorted((i, j) -> Double.compare(tour.get(i), tour.get(j)))
+        //         .collect(Collectors.toList());
+        // return encoded;
+        List<Integer> indices = IntStream.range(0, tour.size()).boxed().collect(Collectors.toList());
+
+        // Sort the indices based on the corresponding tour values
+        indices.sort(Comparator.comparing(tour::get));
+
+        // Create a new list to hold the encoded tour
+        List<Integer> encodedTour = new ArrayList<>(Collections.nCopies(tour.size(), 0));
+
+        // Assign city numbers based on the sorted indices
+        for (int i = 0; i < indices.size(); i++) {
+            encodedTour.set(indices.get(i), i);
+        }
+
+        return encodedTour;
     }
     public static List<Double> randomKeyDecode(List<Integer> tour) {
+        // List<Double> decoded = new ArrayList<>(Collections.nCopies(tour.size(), 0.0));
+        // List<Double> city = IntStream.range(0, tour.size())
+        //         .mapToDouble(i -> Math.random())
+        //         .boxed()
+        //         .sorted()
+        //         .collect(Collectors.toList());
+        // Collections.sort(city);
+        // for (int i = 0; i < tour.size(); i++) {
+        //     int idx = tour.get(i);
+        //     decoded.set(idx, city.get(i));
+        // }
+        // return decoded;
         List<Double> decoded = new ArrayList<>(Collections.nCopies(tour.size(), 0.0));
-        List<Double> city = IntStream.range(0, tour.size())
-                .mapToDouble(i -> Math.random())
-                .boxed()
-                .sorted()
-                .collect(Collectors.toList());
 
+        // Generate a sorted list of random doubles
+        Random rand = new Random();
+        List<Double> city = new ArrayList<>();
         for (int i = 0; i < tour.size(); i++) {
-            int idx = tour.get(i);
+            city.add(rand.nextDouble());
+        }
+        Collections.sort(city);
+
+        // Assign city weights based on the tour indices
+        for (int i = 0; i < tour.size(); i++) {
+            int idx = tour.indexOf(i);
             decoded.set(idx, city.get(i));
         }
+
         return decoded;
     }
     public static List<List<Double>> createPopulation(int populationSize) {
@@ -145,21 +177,26 @@ public class HHOAlgorithm {
         
         return f2_hj_hk;
     }
-    public static List<Double>   HHOAlgorithm(List<City> graph, int maxIteration, int populationSize,double weight) {
+    public static List<Double> HHOAlgorithm(List<City> graph, int maxIteration, int populationSize,double weight) {
         List<List<Double>> population = new ArrayList<>();
         Random random = new Random();
         population = createPopulation(populationSize);
-       double mu = 0.99;
-       double delta = 1 - mu;
+        // System.out.print(fitness(graph, population.get(0), weight));
+        double mu = 0.99;
+        double delta = 1 - mu;
         // for (List<Double> list : population) {
         //     System.out.println(list);
         // }
-       double temp = 30;
-       double beta = 0.99;
-            LLHFunctionInterface pre_selectedFunction = null;
-       double F = 0.5;
+        int gggggg = 0;
+        int llllll = 0;
+        int ooo = 0;
+        double temp = 30;
+        double beta = 0.99;
+        LLHFunctionInterface pre_selectedFunction = null;
+        double F = 0.5;
         List<Double> X_rabbit = new ArrayList<>();
-       for (int temperature = 0; temperature < maxIteration; temperature++) {
+        //double epsilon = Math.ulp(1.0); 
+        for (int temperature = 0; temperature < maxIteration; temperature++) {
             X_rabbit = findBestRabbit(population,weight);
 
             // System.out.println("Best Rabbit" + X_rabbit);
@@ -173,8 +210,9 @@ public class HHOAlgorithm {
                 double q = Math.random();
 
                 double absE = Math.abs(E);
-
-                if(absE >=1){
+                //System.out.println(absE);
+                if(absE >=1.75){
+                    gggggg += 1;
                     int r1 = random.nextInt(population.size());
                     int r2 = random.nextInt(population.size());
                     int r3 = random.nextInt(population.size());
@@ -194,41 +232,47 @@ public class HHOAlgorithm {
                             newTour.add(temp_cal);
                         }
                     }
-                double current_solution_fitness = fitness(graph, tour,weight);
-                double new_solution_fitness = fitness(graph, newTour,weight);
-                double p = metropolis_acceptance_probability(current_solution_fitness, new_solution_fitness, temperature);
-                
-                if(Math.random() <p){
-                    tour = newTour;
-                }
+                    double current_solution_fitness = fitness(graph, tour,weight);
+                    double new_solution_fitness = fitness(graph, newTour,weight);
+                    double p = metropolis_acceptance_probability(current_solution_fitness, new_solution_fitness, temp);
+                    
+                    if(Math.random() <p){
+                        tour = newTour;
+                    }
                 }else{
-                    double r = Math.random();
-                    if(r >= 0.5){
-                        List<Double> newTour = new ArrayList<>();
-                        List<Double> Delta_population = new ArrayList<>();
-                        for(int i = 0; i < tour.size(); i++){
-                            double temp_cal = X_rabbit.get(i) - tour.get(i);
-                            Delta_population.add(temp_cal);
-                        }
-                        if (absE >=0.5){
+                    llllll += 1;
+                    double rand = Math.random();
+                    if (rand >= q) {
+                        double r = Math.random();
+                        if(r >= 0.5){
+                            List<Double> newTour = new ArrayList<>();
+                            List<Double> Delta_population = new ArrayList<>();
                             for(int i = 0; i < tour.size(); i++){
-                                double temp_cal = Delta_population.get(i) - E*Math.abs(J*X_rabbit.get(i) - tour.get(i));
-                                newTour.add(temp_cal);
+                                double temp_cal = X_rabbit.get(i) - tour.get(i);
+                                Delta_population.add(temp_cal);
                             }
-                        }else{
-                            for(int i = 0; i < tour.size(); i++){
-                                double temp_cal = X_rabbit.get(i) + E*Math.abs(Delta_population.get(i));
-                                newTour.add(temp_cal);
+                            if (absE >=0.5){
+                                for(int i = 0; i < tour.size(); i++){
+                                    double temp_cal = Delta_population.get(i) - E*Math.abs(J*X_rabbit.get(i) - tour.get(i));
+                                    newTour.add(temp_cal);
+                                }
+                            }else{
+                                for(int i = 0; i < tour.size(); i++){
+                                    double temp_cal = X_rabbit.get(i) + E*Math.abs(Delta_population.get(i));
+                                    newTour.add(temp_cal);
+                                }
                             }
-                        }
-                        double current_solution_fitness = fitness(graph, tour,weight);
-                        double new_solution_fitness = fitness(graph, newTour,weight);
-                        double p = metropolis_acceptance_probability(current_solution_fitness, new_solution_fitness, temperature);
-                        if(Math.random() <p){
-                            tour = newTour;
+                            double current_solution_fitness = fitness(graph, tour,weight);
+                            double new_solution_fitness = fitness(graph, newTour,weight);
+                            double p = metropolis_acceptance_probability(current_solution_fitness, new_solution_fitness, temp);
+                            if(Math.random() <p){
+                                tour = newTour;
+                            }
                         }
                     }else{
+                        ooo += 1;
                         List<Integer> tourendcode = randomKeyEncode(tour);
+                        
                         LLHFunctionInterface selectedFunction = choiceFunction();
                         selectedFunction.incrementCounter();
 
@@ -260,7 +304,7 @@ public class HHOAlgorithm {
                             double Q = Math.max(0,score+1)/(10*neighborhoodfunctions.size());
                             neighborhoodfunction.setScore(Math.max(score,Q*(Math.pow(1.5,-score))));
                         }
-                        double p = metropolis_acceptance_probability(current_solution_fitness, new_solution_fitness, temperature);
+                        double p = metropolis_acceptance_probability(current_solution_fitness, new_solution_fitness, temp);
                         if(Math.random() <p){
                             tourendcode = newTour;
                         }
@@ -270,6 +314,7 @@ public class HHOAlgorithm {
                         }else{
                             mu = Math.max(0.01, mu-0.01);
                         }
+                        //System.out.println(tour.size());
                         tour = randomKeyDecode(tourendcode);
                         pre_selectedFunction = selectedFunction;
                     }   
@@ -278,6 +323,9 @@ public class HHOAlgorithm {
             }
             temp= beta*temp;
         }
+        System.out.println(gggggg);
+        System.out.println(llllll);
+        System.out.println(ooo);
         return X_rabbit;
     }
 
@@ -294,18 +342,48 @@ public class HHOAlgorithm {
                 new City("Hai Phong",8, 45),
                 new City("Cao Bang",9, 9)
         );
+        int lt = 0;
+        int gt = 0;
+        int T = 1000;
+        for (int i=0; i <= T; i ++){
+            double E0 = 2 * Math.random() - 1;
+            double E = 2 * E0*(1- (i / T));
+            double absE = Math.abs(E);
+            if (absE >= 1.25) {
+                gt += 1;
+            }else{
+                lt += 1;
+            }
+        }
+        System.out.printf("%d, %d\n", gt, lt);
+        // List<Integer> tour = Arrays.asList(4, 2, 3, 0, 1, 5, 9, 7, 8, 6);
+        // RandomInsertionDoubleCycles rr = new RandomInsertionDoubleCycles();
+        // tour = rr.apply(tour);
+        // List<Double> new_t = randomKeyDecode(tour);
+        // System.out.println(tour);
         double weight = 1 + Math.random() * (2 - 1);
-        List<Double> bestRabbit = HHOAlgorithm(graph, 50, 100,weight);
+        weight = 1;
+        GraphGenerator generator = new GraphGenerator();
+        generator.generate_file(null, 500);
+        graph = generator.generate_graph("kroA100.txt");
+        List<Double> bestRabbit = HHOAlgorithm(graph, 1000, 10, weight);
+        for (LLHFunctionInterface i : neighborhoodfunctions){
+            System.out.println(i.getCounter());
+        }
+        City a = graph.get(0);
+        City b = graph.get(1);
+        System.out.printf("%f, %f\n", a.getX(), a.getY());
+        System.out.printf("%f, %f\n", b.getX(), b.getY());
+        System.out.println(a.distanceTo(b));
         // List<Double> pop = createPopulation(10).get(0);
         // System.out.println("pop" + pop);
         // List<Integer> test = neighborhoodfunctions.get(0).apply(randomKeyEncode(pop));
         // System.out.println("test" + test);
         System.out.println("best finest "+ fitness(graph, (bestRabbit),weight));
         System.out.println("Best Rabbit");
-        List<Integer> best =  randomKeyEncode(bestRabbit);
+        List<Integer> best = randomKeyEncode(bestRabbit);
         for (int i = 0; i < best.size(); i++) {
             System.out.print(graph.get(best.get(i)) + " -> ");
-
         }
     }
 }

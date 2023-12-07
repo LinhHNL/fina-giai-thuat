@@ -25,26 +25,66 @@ public class RandomInsertionDoubleCycles implements LLHFunctionInterface{
     }
     
 
-    public static List<Integer> randomInsertionDoubleCycles(List<Integer> tour) {
+    public static List<Integer> randomInsertionDoubleCycles(List<Integer> orgTour) {
+        // if (tour.size() < 4) {
+        //     return Collections.emptyList();
+        // }
+
+        // int index1 = (int) (Math.random() * tour.size());
+        // int index2 = (int) (Math.random() * tour.size());
+
+        // while (index1 == index2) {
+        //     index2 = (int) (Math.random() * tour.size());
+        // }
+        // int insertIndex = (int) (Math.random() * tour.size());
+
+        // int element1 = tour.get(index1);
+        // int element2 = tour.get(index2);
+
+        // // Swap the elements
+        // tour.set(index1, element2);
+        // tour.set(index2, element1);
+
+        // // Insert the original elements into the tour
+        // tour.add(insertIndex, element1);
+        // tour.add(insertIndex, element2);
+
+        // return tour;
+        List<Integer> tour = new ArrayList<>(orgTour);
+        // Check that the tour has at least 4 cities
         if (tour.size() < 4) {
             return Collections.emptyList();
         }
-
-        int index1 = (int) (Math.random() * tour.size());
-        int index2 = (int) (Math.random() * tour.size());
-
-        while (index1 == index2) {
-            index2 = (int) (Math.random() * tour.size());
+        Random rand = new Random();
+        // Randomly select two indices from the tour
+        int start1 = rand.nextInt(tour.size());
+        int end1 = rand.nextInt(tour.size());
+        while (Math.abs(end1 - start1) > tour.size() / 2 || Math.abs(end1 - start1) < 4) {
+            start1 = rand.nextInt(tour.size());
+            end1 = rand.nextInt(tour.size());
         }
-        int insertIndex = (int) (Math.random() * tour.size());
-        int temp = tour.get(index1);
-        tour.set(index1, tour.get(index2));
-        tour.set(index2, temp);
-
-        // Insert the two cities into the tour
-        tour.add(insertIndex, tour.get(index1));
-        tour.add(insertIndex, tour.get(index2));
-
+        // Adjust the number of elements to ensure an even number of pairs
+        if ((end1 - start1) % 2 != 0) {
+            end1++;
+        }
+        // Ensure start1 is less than or equal to end1
+        if (start1 > end1) {
+            int temp = start1;
+            start1 = end1;
+            end1 = temp;
+        }
+        // Remove the reversed subsequence
+        List<Integer> temp = new ArrayList<>();
+        for (int i = start1; i < end1; i++) {
+            temp.add(tour.remove(start1));
+        }
+        List<Integer> insert = new ArrayList<>(temp.subList(temp.size()/2, temp.size()));
+        
+        insert.addAll(new ArrayList<>(temp.subList(0, temp.size()/2)));
+        //System.out.println(insert);
+        // Insert at the position of another random city
+        int r1 = rand.nextInt(tour.size());
+        tour.addAll(r1, insert);
         return tour;
     }
     public Integer getConsec_counts(LLHFunctionInterface function) {

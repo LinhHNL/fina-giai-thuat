@@ -25,37 +25,62 @@ public class RandomReversingSwapSubsequence implements LLHFunctionInterface{
         return randomReversingSwapSubsequence(orgTour);
     }
     public static List<Integer> randomReversingSwapSubsequence(List<Integer> orgTour) {
+        // List<Integer> tour = new ArrayList<>(orgTour);
+        // // Check that the tour has at least 4 cities
+        // if (tour.size() < 4) {
+        //     return Collections.emptyList();
+        // }
+        // // Randomly select two indices from the first half of the tour
+        // int start1 = (int) (Math.random() * (tour.size() / 2));
+        // int end1 = start1 + (int) (Math.random() * (tour.size() / 2));
+        // // Calculate the number of elements to be swapped
+        // int noc = end1 - start1;
+        // // Randomly select an index from the second half of the tour
+        // int start2 = (int) (Math.random() * (tour.size() / 2) + noc);
+
+        // // Calculate the end index for the second subsequence
+        // int end2 = start2 + noc;
+        // while (end2 >= tour.size()) {
+        //    start2 = (int) (Math.random() * (tour.size() / 2) + noc);
+
+        // // Calculate the end index for the second subsequence
+        //          end2 = start2 + noc;
+        // }
+        // // Swap the two subsequences
+        // List<Integer> subsequence1 = tour.subList(start1, end1 + 1);
+        // List<Integer> subsequence2 = tour.subList(start2, end2 + 1);
+        // tour.set(start1, subsequence2.get(0));
+        // tour.set(start2, subsequence1.get(0));
+        // for (int i = 1; i < noc; i++) {
+        //     tour.set(start1 + i, subsequence2.get(i));
+        //     tour.set(start2 + i, subsequence1.get(i));
+        // }
+
+        // return tour;
         List<Integer> tour = new ArrayList<>(orgTour);
         // Check that the tour has at least 4 cities
         if (tour.size() < 4) {
             return Collections.emptyList();
         }
+        Random rand = new Random();
         // Randomly select two indices from the first half of the tour
-        int start1 = (int) (Math.random() * (tour.size() / 2));
-        int end1 = start1 + (int) (Math.random() * (tour.size() / 2));
+        int start1 = rand.nextInt(tour.size() / 2);
+        int end1 = start1 + rand.nextInt(tour.size() / 2 - start1);
         // Calculate the number of elements to be swapped
         int noc = end1 - start1;
         // Randomly select an index from the second half of the tour
-        int start2 = (int) (Math.random() * (tour.size() / 2) + noc);
-
+        int start2 = rand.nextInt(tour.size() - noc - start1) + start1;
         // Calculate the end index for the second subsequence
         int end2 = start2 + noc;
-        while (end2 >= tour.size()) {
-           start2 = (int) (Math.random() * (tour.size() / 2) + noc);
-
-        // Calculate the end index for the second subsequence
-                 end2 = start2 + noc;
-        }
         // Swap the two subsequences
-        List<Integer> subsequence1 = tour.subList(start1, end1 + 1);
-        List<Integer> subsequence2 = tour.subList(start2, end2 + 1);
-        tour.set(start1, subsequence2.get(0));
-        tour.set(start2, subsequence1.get(0));
-        for (int i = 1; i < noc; i++) {
-            tour.set(start1 + i, subsequence2.get(i));
-            tour.set(start2 + i, subsequence1.get(i));
-        }
-
+        List<Integer> subsequence1 = new ArrayList<>(tour.subList(start1, end1 + 1));
+        List<Integer> subsequence2 = new ArrayList<>(tour.subList(start2, end2 + 1));
+        Collections.reverse(subsequence1);
+        Collections.reverse(subsequence2);
+        tour.subList(start1, end1 + 1).clear();
+        tour.addAll(start1, subsequence2);
+        tour.subList(start2, end2 + 1).clear();
+        tour.addAll(start2, subsequence1);
         return tour;
         }
     public Integer getConsec_counts(LLHFunctionInterface function) {
