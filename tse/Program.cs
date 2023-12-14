@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 
 namespace tse
 {
@@ -9,34 +11,51 @@ namespace tse
     {
         public static void Main(string[] args)
         {
-            List<City<Double>> graph = new List<City<Double>>();
-            graph.Add(new City<Double>("Ha Noi", 1, 1));
-            graph.Add(new City<Double>("Hai Phong", 2, 2));
-            graph.Add(new City<Double>("Da Nang", 3, 3));
-            graph.Add(new City<Double>("Ho Chi Minh", 4, 4));
-            graph.Add(new City<Double>("Can Tho", 5, 5));
-            graph.Add(new City<Double>("Hue", 6, 6));
-            graph.Add(new City<Double>("Nha Trang", 7, 7));
-            graph.Add(new City<Double>("Vung Tau", 8, 8));
-            graph.Add(new City<Double>("Da Lat", 9, 9));
-            graph.Add(new City<Double>("Quang Ninh", 10, 10));
-            graph.Add(new City<Double>("Quang Binh", 11, 11));
-            graph.Add(new City<Double>("Quang Tri", 12, 12));
-            graph.Add(new City<Double>("Quang Nam", 13, 13));
-            graph.Add(new City<Double>("Quang Ngai", 14, 14));
-            graph.Add(new City<Double>("Binh Dinh", 15, 15));
-            HHO_5LLH<Double> hho = new HHO_5LLH<Double>(graph);
-           ( List<int> bestSolution , double fitness) = HHO_5LLH<Double>.HHO_MCF(30, 10);
-            foreach (var value in bestSolution)
-        {
-            Console.Write ($" {value} ");
-        }
+                      List<string> files = new List<string>();
+// Khởi tạo file csv
+            using (var csvWriter = new StreamWriter("datarllh.csv"))
+            {
+                // Viết header
+                csvWriter.WriteLine("Name, Time (nanos)");
+            // Duyệt qua tất cả các file trong folder dataset
+            foreach (var file in Directory.GetFiles("datasets", "*.txt"))
+                {
+                    // Tên file
+                    string fileName = Path.GetFileName(file);
 
+                    // Đọc file và tạo graph
+                    List<City<double>> graph = new List<City<double>>();
+                    using (var reader = new StreamReader(file))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            var data = line.Split(" ");
+                            Double X = Double.Parse(data[1]);
+                            Double Y = Double.Parse(data[2]);
+                            // Console.WriteLine(data[0] + " " +data[1] + " " +data[2]);
+                            // Console.WriteLine(data[0] + " " +X + " " +Y);
+                            graph.Add(new City<Double>(data[0], X, Y));
+                        }
+                    }
+                    // Khởi tạo stopwatch
+                    Stopwatch stopwatch = new Stopwatch();
 
+                    // Bắt đầu tính thời gian
+                    stopwatch.Start();
+                    HHO_5LLH<double> hho = new HHO_5LLH<double>(graph);
+                // Chạy thuật toán
+                    (List<int> bestSolution, double fitness) = HHO_5LLH<double>.HHO5LLH(30, 10);
+                        stopwatch.Stop();
+                    csvWriter.WriteLine($"{fileName}, {stopwatch.ElapsedTicks}");
 
+                }
+            }
+
+            }
 
 
                                             
         }
-    }
+    
 }

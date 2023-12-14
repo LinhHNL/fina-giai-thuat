@@ -253,7 +253,7 @@ public static (List<double>, double) FindBestRabbit(List<(List<double> tour, dou
         //Trả về kết quả là tour mới vừa được cập nhật
         return newTour;
     }
-    public static (List<int>,double) HHO_MCF(int T , int N){
+    public static (List<int>,double) HHORandom(int T , int N){
             
         // Input:
         //     N: integer
