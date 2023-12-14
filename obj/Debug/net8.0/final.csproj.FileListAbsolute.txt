@@ -1,0 +1,5 @@
+D:\hoc\HK5\DAAOA\mid\final\obj\Debug\net8.0\final.GeneratedMSBuildEditorConfig.editorconfig
+D:\hoc\HK5\DAAOA\mid\final\obj\Debug\net8.0\final.AssemblyInfoInputs.cache
+D:\hoc\HK5\DAAOA\mid\final\obj\Debug\net8.0\final.AssemblyInfo.cs
+D:\hoc\HK5\DAAOA\mid\final\obj\Debug\net8.0\final.csproj.CoreCompileInputs.cache
+D:\hoc\HK5\DAAOA\mid\final\obj\Debug\net8.0\final.sourcelink.json

@@ -29,7 +29,6 @@ public class RandomDoubleCycles implements LLHFunctionInterface{
         List<List<Integer>> reversedSublist = new ArrayList<>();
         for (int i = 0; i < tour.size(); i=i+2) {
            reversedSublist.add(tour.subList(i, i+2));
-
         }
         List<Integer> saveIndexSwap = new ArrayList<>();
         for (int i = 0; i < reversedSublist.size()/2; i++) {

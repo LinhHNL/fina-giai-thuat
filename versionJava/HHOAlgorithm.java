@@ -15,8 +15,8 @@ public class HHOAlgorithm {
               new RandomInsertionSubsequence(),//success
               new RandomNestedCycles(), //success
               new RandomReversingSubsequence(),//success
-              new RandomReversingSwapSubsequence(),//success
-              new RandomSwap(),//success
+            //   new RandomReversingSwapSubsequence(),//success
+            //   new RandomSwap(),//success
               new RandomSwapDoubleCycles(),//success
               new RandomSwapSubsequence()
         );
@@ -35,9 +35,6 @@ public class HHOAlgorithm {
             }
         }
         fitness  += graph.get(tour.get(tour.size() - 1)).distanceTo(graph.get(tour.get(0)))*Math.pow(weight, tour.size() - 1);
-                // System.out.println("continuousTour" + tour);
-
-        // System.out.println("fitness" + fitness);
         return fitness;
     }
     public static List<Integer> randomKeyEncode(List<Double> tour) {
@@ -156,7 +153,7 @@ public class HHOAlgorithm {
         // }
        double temp = 30;
        double beta = 0.99;
-            LLHFunctionInterface pre_selectedFunction = null;
+        LLHFunctionInterface pre_selectedFunction = null;
        double F = 0.5;
         List<Double> X_rabbit = new ArrayList<>();
        for (int temperature = 0; temperature < maxIteration; temperature++) {
@@ -165,15 +162,10 @@ public class HHOAlgorithm {
             // System.out.println("Best Rabbit" + X_rabbit);
             for (List<Double> tour : population) {
                 double E0 = 2 * Math.random() - 1;
-
                 double J = 2 * (1 - Math.random());
-
                 double E = 2 * E0*(1- (temperature / maxIteration));
-
                 double q = Math.random();
-
                 double absE = Math.abs(E);
-
                 if(absE >=1){
                     int r1 = random.nextInt(population.size());
                     int r2 = random.nextInt(population.size());
@@ -238,14 +230,13 @@ public class HHOAlgorithm {
                         long end_time = System.nanoTime();
                         long durationtime = end_time - start_time;
                         selectedFunction.setTimestamp(durationtime);
-
+                        
 
                         double current_solution_fitness = discreteFitness(graph, tourendcode,weight);
                         double new_solution_fitness = discreteFitness(graph, (newTour),weight);
 
                         double f1 = calculateF1(selectedFunction, mu, current_solution_fitness, new_solution_fitness, durationtime);
                         selectedFunction.setF1(f1);
-
                         if(pre_selectedFunction == null){
                             pre_selectedFunction = neighborhoodfunctions.get((neighborhoodfunctions.indexOf(pre_selectedFunction)+1)%(neighborhoodfunctions.size()-1));
                         }

@@ -1,0 +1,15 @@
+D:\hoc\HK5\DAAOA\mid\final\tse\bin\Debug\net8.0\tse.exe
+D:\hoc\HK5\DAAOA\mid\final\tse\bin\Debug\net8.0\tse.deps.json
+D:\hoc\HK5\DAAOA\mid\final\tse\bin\Debug\net8.0\tse.runtimeconfig.json
+D:\hoc\HK5\DAAOA\mid\final\tse\bin\Debug\net8.0\tse.dll
+D:\hoc\HK5\DAAOA\mid\final\tse\bin\Debug\net8.0\tse.pdb
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.GeneratedMSBuildEditorConfig.editorconfig
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.AssemblyInfoInputs.cache
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.AssemblyInfo.cs
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.csproj.CoreCompileInputs.cache
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.sourcelink.json
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.dll
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\refint\tse.dll
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.pdb
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\tse.genruntimeconfig.cache
+D:\hoc\HK5\DAAOA\mid\final\tse\obj\Debug\net8.0\ref\tse.dll
